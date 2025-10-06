@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Kimia Sederhana</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .calculator {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .calculator h2 {
+            color: #34495e;
+            margin-top: 0;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kalkulator Kimia Sederhana</h1>
+        
+        <div class="calculator">
+            <h2>1. Kalkulator Massa Molar</h2>
+            <p>Masukkan rumus kimia (contoh: H2O, NaCl, CO2):</p>
+            <input type="text" id="formula" placeholder="Masukkan rumus, misal H2O" style="width: 200px;">
+            <button onclick="hitungMassaMolar()">Hitung Massa Molar</button>
+            <div id="result-molar"></div>
+        </div>
+        
+        <div class="calculator">
+            <h2>2. Kalkulator Molaritas (Konsentrasi Larutan)</h2>
+            <p>Massa zat (gram): <input type="number" id="massa" placeholder="0" step="0.01"></p>
+            <p>Massa molar (g/mol): <input type="number" id="massaMolar" placeholder="0" step="0.01"></p>
+            <p>Volume larutan (liter): <input type="number" id="volume" placeholder="0" step="0.01"></p>
+            <button onclick="hitungMolaritas()">Hitung Molaritas (M)</button>
+            <div id="result-molaritas"></div>
+        </div>
+    </div>
+
+    <script>
+        // Database massa atom sederhana (dalam g/mol, aproksimasi)
+        const massaAtom = {
+            'H': 1.008, 'He': 4.003, 'Li': 6.941, 'Be': 9.012, 'B': 10.81, 'C': 12.01,
+            'N': 14.01, 'O': 16.00, 'F': 19.00, 'Ne': 20.18, 'Na': 22.99, 'Mg': 24.31,
+            'Al': 26.98, 'Si': 28.09, 'P': 30.97, 'S': 32.07, 'Cl': 35.45, 'Ar': 39.95,
+            'K': 39.10, 'Ca': 40.08, 'Fe': 55.85, 'Cu': 63.55, 'Zn': 65.38, 'Br': 79.90,
+            'Ag': 107.87, 'I': 126.90, 'Au': 196.97, 'U': 238.03
+        };
+
+        function hitungMassaMolar() {
+            const formula = document.getElementById('formula').value.trim().toUpperCase();
+            const resultDiv = document.getElementById('result-molar');
+            
+            if (!formula) {
+                resultDiv.innerHTML = '<span class="error">Masukkan rumus kimia!</span>';
+                return;
+            }
+
+            let totalMassa = 0;
+            let currentElement = '';
+            let currentCount = 1;
+
+            for (let i = 0; i < formula.length; i++) {
+                const char = formula[i];
+                if (char >= 'A' && char <= 'Z') {
+                    // Elemen baru
+                    if (currentElement) {
+                        const massa = massaAtom[currentElement] || 0;
+                        totalMassa += massa * currentCount;
+                    }
+                    currentElement = char;
+                    currentCount = 1;
+                } else if (char >= '0' && char <= '9') {
+                    // Angka koefisien
+                    currentCount = currentCount * 10 + parseInt(char);
+                } else if (char === '(' || char === ')') {
+                    // Dukungan dasar untuk kurung (sederhana, abaikan untuk sekarang)
+                    resultDiv.innerHTML = '<span class="error">Kurung belum didukung sepenuhnya. Gunakan rumus sederhana.</span>';
+                    return;
+                }
+            }
+
+            // Tambahkan elemen terakhir
+            if (currentElement) {
+                const massa = massaAtom[currentElement] || 0;
+                totalMassa += massa * (currentCount || 1);
+            }
+
+            if (totalMassa === 0) {
+                resultDiv.innerHTML = '<span class="error">Rumus tidak dikenali atau massa atom tidak tersedia.</span>';
+            } else {
+                resultDiv.innerHTML = `<span class="success">Massa molar ${formula}: ${totalMassa.toFixed(2)} g/mol</span>`;
+            }
+        }
+
+        function hitungMolaritas() {
+            const massa = parseFloat(document.getElementById('massa').value) || 0;
+            const massaMolar = parseFloat(document.getElementById('massaMolar').value) || 0;
+            const volume = parseFloat(document.getElementById('volume').value) || 0;
+            const resultDiv = document.getElementById('result-molaritas');
+            
+            if (massa === 0 || massaMolar === 0 || volume === 0) {
+                resultDiv.innerHTML = '<span class="error">Masukkan semua nilai yang valid!</span>';
+                return;
+            }
+
+            const mol = massa / massaMolar;
+            const molaritas = mol / volume;
+
+            resultDiv.innerHTML = `<span class="success">Molaritas (M) = ${molaritas.toFixed(4)} mol/L<br>
+                                   Jumlah mol = ${mol.toFixed(4)} mol</span>`;
+        }
+    </script>
+</body>
+</html>
