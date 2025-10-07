@@ -1,3 +1,4 @@
+/* Gaya dasar */
 body {
   background-color: #d6cdf7;
   font-family: Arial, sans-serif;
@@ -6,6 +7,7 @@ body {
   padding: 0;
 }
 
+/* Kartu Profil */
 .kartu-profil {
   width: 300px;
   margin: 50px auto;
@@ -16,6 +18,7 @@ body {
   text-align: center;
 }
 
+/* Foto profil */
 .foto-profil {
   width: 150px;
   height: 150px;
@@ -25,18 +28,22 @@ body {
   margin: 0 auto 12px;
 }
 
+/* Judul dan link */
 .kartu-profil h1 {
   margin: 0.5em 0;
   font-size: 1.8em;
 }
-
 .kartu-profil a {
   display: inline-block;
   margin: 6px 0;
   color: #0a3d8f;
   text-decoration: none;
 }
+.kartu-profil a:hover {
+  text-decoration: underline;
+}
 
+/* Tombol sapa */
 .btn-sapa {
   background-color: #008CBA;
   color: white;
