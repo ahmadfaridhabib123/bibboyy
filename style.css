@@ -1,6 +1,7 @@
 /* Gaya dasar */
+/* style.css - opsi gradasi radial */
 body {
-  background-color: #d6cdf7;
+  background: radial-gradient(circle at center, #d6cdf7 0%, #ffffff 60%, #ffffff 100%);
   font-family: Arial, sans-serif;
   color: #1a1a1a;
   margin: 0;
