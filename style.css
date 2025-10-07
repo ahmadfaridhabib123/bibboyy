@@ -12,6 +12,9 @@ color: #d6cdf7;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   text-align: center;
 }
+.button1 {
+  background-color: #008CBA;
+}
 .kartu-profil img {
   width: 150px;
   border-radius: 50%;
